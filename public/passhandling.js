@@ -184,6 +184,9 @@ document.querySelector('.reset-btn').addEventListener('click', async () => {
 })
 
 document.querySelector('.run-btn').addEventListener('click', async () => {
+    const inputString = localStorage.getItem('input.txt')
+    const optabString = localStorage.getItem('optab.txt')
+
     try {
         const response = await fetch("/pass1", {
             method: 'POST',
@@ -191,8 +194,8 @@ document.querySelector('.run-btn').addEventListener('click', async () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                input: localStorage.getItem('input.txt'),
-                optab: localStorage.getItem('optab.txt')
+                input: inputString,
+                optab: optabString
             })
         })
 

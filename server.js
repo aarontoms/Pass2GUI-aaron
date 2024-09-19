@@ -10,6 +10,7 @@ app.use(express.json())
 
 app.post('/pass1', async (req, res) => {
     try {
+        res.json({ intermediate: "AUGEYSTOOOO", symtab: "AUGEYSTOOOO", output: "AUGEYSTOOOO" })
         const input = req.body.input
         const optab = req.body.optab
         if (!input || !optab || input === "" || optab === "") {
