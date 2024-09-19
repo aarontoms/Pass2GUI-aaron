@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('.intermediate-btn').click()
 })
 
+document.querySelector('.left-box textarea').addEventListener('blur', function () {
+    this.setAttribute('readonly', true)
+    document.querySelector('.leftsave').click()
+})
+
 document.querySelector('.input-btn').addEventListener('click', async () => {
     if (document.querySelector('.left-box textarea').value !== localStorage.getItem('optab.txt') && leftselected === "optab" && localStorage.getItem('optab.txt')) {
         const result = confirm('You have unsaved changes. Do you want to save them?')
@@ -108,11 +113,6 @@ document.getElementById('editButton').addEventListener('click', function () {
     const textarea = document.querySelector('.left-box textarea')
     textarea.removeAttribute('readonly')
     textarea.focus()
-})
-
-document.querySelector('.left-box textarea').addEventListener('blur', async () => {
-    document.querySelector('.leftsave').click()
-    this.setAttribute('readonly', true)
 })
 
 document.querySelector('.leftsave').addEventListener('click', async function () {
