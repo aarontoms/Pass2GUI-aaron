@@ -1,0 +1,6 @@
+SUB	05 
+CMP     03
+LDA	00
+STA	23
+ADD	01
+JNC	08
