@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-app.post('/pass1', async (req, res) => {
+app.post('/pass1', function (req, res){
     try {
         res.json({ intermediate: "AUGEYSTOOOO", symtab: "AUGEYSTOOOO", output: "AUGEYSTOOOO" })
         const input = req.body.input
