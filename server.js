@@ -1,80 +1,47 @@
 const express = require('express')
 const path = require('path')
 const fs = require('fs').promises
-const multer = require('multer')
-const internal = require('stream')
 
 const app = express()
 const port = process.env.port || 3000
 
-const upload = multer({ dest: 'uploads/' })
 app.use(express.static('public'))
-app.use(express.json());
+app.use(express.json())
 
-app.post('/upload', upload.single('file'), (req, res) => {
-    const file = req.file
-    if (!file) {
-        return res.status(400).send('No file uploaded.')
-    }
-
-    const filePath = path.join('uploads', file.originalname)
-    fs.promises.rename(file.path, filePath, (err) => {
-        if (err) {
-            return res.status(500).send('Error saving file.')
-        }
-        res.send('File uploaded and saved successfully.')
-    })
-})
-
-// app.use('/download', express.static(path.join(__dirname, 'uploads')))
-app.get('/download/:filename', (req, res) => {
-    const filename = req.params.filename
-    const filePath = path.join(__dirname, 'uploads', filename)
-
-    res.download(filePath, filename, (err) => {
-        if (err) {
-            res.status(404).send(err.message)
-        }
-    })
-})
-
-
-app.get('/pass1', async (req, res) => {
+app.post('/pass1', async (req, res) => {
     try {
-        const input = await fs.readFile('uploads/input.txt', 'utf-8')
-        const optab = await fs.readFile('uploads/optab.txt', 'utf-8')
-        if (!input || !optab) {
+        const input = req.body.input
+        const optab = req.body.optab
+        if (!input || !optab || input === "" || optab === "") {
             return res.status(400).send('Both files need to be uploaded.')
         }
 
         const inputArr = input.split('\n')
         for (let i = 0; i < inputArr.length; i++) {
-            inputArr[i] = inputArr[i].trim().split(/\s+/);
+            inputArr[i] = inputArr[i].trim().split(/\s+/)
         }
         const optabArr = optab.split('\n')
         for (let i = 0; i < optabArr.length; i++) {
-            optabArr[i] = optabArr[i].trim().split(/\s+/);
+            optabArr[i] = optabArr[i].trim().split(/\s+/)
         }
 
         const pass1out = pass1(inputArr, optabArr)
-        await fs.writeFile('uploads/intermediate.txt', pass1out.intermediate);
-        await fs.writeFile('uploads/symtab.txt', pass1out.symtab);
+        // await fs.writeFile('uploads/intermediate.txt', pass1out.intermediate)
+        // await fs.writeFile('uploads/symtab.txt', pass1out.symtab)
 
         const intermediateArr = pass1out.intermediate.split('\n')
         for (let i = 0; i < intermediateArr.length; i++) {
-            intermediateArr[i] = intermediateArr[i].trim().split(/\s+/);
+            intermediateArr[i] = intermediateArr[i].trim().split(/\s+/)
         }
         const symtabArr = pass1out.symtab.split('\n')
         for (let i = 0; i < symtabArr.length; i++) {
-            symtabArr[i] = symtabArr[i].trim().split(/\s+/);
+            symtabArr[i] = symtabArr[i].trim().split(/\s+/)
         }
 
         const pass2out = pass2(optabArr, intermediateArr, symtabArr)
         // console.log(pass2out.output)
-        if (pass2out.output !== "AUGEYSTOOOO") {
-            await fs.writeFile('uploads/output.txt', pass2out.output)
-        } else {
-            return res.status(502).send("Wrong input or optab")
+        if (pass2out.output === "AUGEYSTOOOO") {
+            res.status(505)
         }
         pass2out.intermediate = pass1out.intermediate
         pass2out.symtab = pass1out.symtab
@@ -82,11 +49,12 @@ app.get('/pass1', async (req, res) => {
 
     } catch (err) {
         return res.status(500).send("Assembler error.")
+
     }
 })
 
 function pass1(inputArr, optabArr) {
-    let locctr = 0, i = 1, prev, top = 0, pos = -1;
+    let locctr = 0, i = 1, prev, top = 0, pos = -1
     let interAddr = []
     const symtabArr = [[]]
     let opcode

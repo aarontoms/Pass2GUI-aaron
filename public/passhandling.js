@@ -8,66 +8,50 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 document.querySelector('.input-btn').addEventListener('click', async () => {
-    let text
-    try {
-        text = await contentFetcher("optab.txt")
-        // console.log(text)
-        if (document.querySelector('.left-box textarea').value !== text && leftselected === "optab") {
-            const result = confirm('You have unsaved changes. Do you want to save them?')
-            if (result) {
-                document.querySelector('.leftsave').click()
-            } else {
-                return
-            }
+    if (document.querySelector('.left-box textarea').value !== localStorage.getItem('optab.txt') && leftselected === "optab" && localStorage.getItem('optab.txt')) {
+        const result = confirm('You have unsaved changes. Do you want to save them?')
+        if (result) {
+            document.querySelector('.leftsave').click()
+        } else {
+            return
         }
-    } catch (err) {
-        console.error(err)
     }
 
-    document.querySelector('#lname').textContent = "Input File";
+    document.querySelector('#lname').textContent = "Input File"
     leftselected = "input"
     document.querySelector('.input-btn').style.backgroundColor = "#38405c"
     document.querySelector('.optab-btn').style.backgroundColor = "#44475a"
-    try {
-        text = await contentFetcher("input.txt")
-        if (text === "") {
-            throw new Error('File not found')
-        }
+
+    const text = localStorage.getItem('input.txt')
+    if (text) {
         document.querySelector('.left-box textarea').value = text
-    } catch (err) {
+    } else {
         document.querySelector('.left-box textarea').value = ""
         document.querySelector('.left-box textarea').placeholder = "Write your input code here"
     }
 })
 document.querySelector('.optab-btn').addEventListener('click', async () => {
-    let text
-    try {
-        text = await contentFetcher("input.txt")
-        if (document.querySelector('.left-box textarea').value !== text && leftselected === "input") {
-            const result = confirm('You have unsaved changes. Do you want to save them?')
-            if (result) {
-                document.querySelector('.leftsave').click()
-            } else {
-                return
-            }
+    if (document.querySelector('.left-box textarea').value !== localStorage.getItem('input.txt') && leftselected === "input" && localStorage.getItem('input.txt')) {
+        const result = confirm('You have unsaved changes. Do you want to save them?')
+        if (result) {
+            document.querySelector('.leftsave').click()
+        } else {
+            return
         }
-    } catch (err) {
-        console.error(err)
     }
 
     document.querySelector('#lname').innerHTML = "Optab File"
     leftselected = "optab"
     document.querySelector('.optab-btn').style.backgroundColor = "#38405c"
     document.querySelector('.input-btn').style.backgroundColor = "#44475a"
-    try {
-        text = await contentFetcher("optab.txt")
-        if (text === "") {
-            throw new Error('File not found')
-        }
+
+    const text = localStorage.getItem('optab.txt')
+    if (text) {
         document.querySelector('.left-box textarea').value = text
-    } catch (err) {
+    } else {
         document.querySelector('.left-box textarea').value = ""
-        document.querySelector('.left-box textarea').placeholder = "Write your optab here"
+        console.log('No optab file found in local storage')
+        document.querySelector('.left-box textarea').placeholder = "Write your optab code here"
     }
 })
 
@@ -79,13 +63,10 @@ document.querySelector('.intermediate-btn').addEventListener('click', async () =
         btn.style.backgroundColor = "#44475a"
     })
 
-    try {
-        text = await contentFetcher("intermediate.txt")
-        if (text === "") {
-            throw new Error('File not found')
-        }
+    const text = localStorage.getItem('intermediate.txt')
+    if (text) {
         document.querySelector('.right-box textarea').value = text
-    } catch (err) {
+    } else {
         document.querySelector('.right-box textarea').value = ""
         document.querySelector('.right-box textarea').placeholder = "Run the assembler to generate intermediate file"
     }
@@ -98,13 +79,10 @@ document.querySelector('.symtab-btn').addEventListener('click', async () => {
         btn.style.backgroundColor = "#44475a"
     })
 
-    try {
-        text = await contentFetcher("symtab.txt")
-        if (text === "") {
-            throw new Error('File not found')
-        }
+    const text = localStorage.getItem('symtab.txt')
+    if (text) {
         document.querySelector('.right-box textarea').value = text
-    } catch (err) {
+    } else {
         document.querySelector('.right-box textarea').value = ""
         document.querySelector('.right-box textarea').placeholder = "Run the assembler to generate symtab file"
     }
@@ -117,30 +95,14 @@ document.querySelector('.output-btn').addEventListener('click', async () => {
         btn.style.backgroundColor = "#44475a"
     })
 
-    try {
-        text = await contentFetcher("output.txt")
-        if (text === "") {
-            throw new Error('File not found')
-        }
+    const text = localStorage.getItem('output.txt')
+    if (text && text !== "AUGEYSTOOOO") {
         document.querySelector('.right-box textarea').value = text
-    } catch (err) {
+    } else {
         document.querySelector('.right-box textarea').value = ""
         document.querySelector('.right-box textarea').placeholder = "Run the assembler to generate output file"
     }
 })
-
-async function contentFetcher(filename) {
-    try {
-        const response = await fetch("/download/" + filename);
-        if (response.ok) {
-            return await response.text();
-        } else {
-            throw new Error('File not found');
-        }
-    } catch (err) {
-        throw err
-    }
-}
 
 document.getElementById('editButton').addEventListener('click', function () {
     const textarea = document.querySelector('.left-box textarea')
@@ -148,7 +110,8 @@ document.getElementById('editButton').addEventListener('click', function () {
     textarea.focus()
 })
 
-document.querySelector('.left-box textarea').addEventListener('blur', function () {
+document.querySelector('.left-box textarea').addEventListener('blur', async () => {
+    document.querySelector('.leftsave').click()
     this.setAttribute('readonly', true)
 })
 
@@ -164,23 +127,7 @@ document.querySelector('.leftsave').addEventListener('click', async function () 
         fileName = 'optab.txt'
     }
 
-    const blob = new Blob([content], { type: 'text/plain' })
-    const formData = new FormData()
-    formData.append('file', blob, fileName)
-
-    try {
-        const response = await fetch('/upload', {
-            method: 'POST',
-            body: formData
-        })
-        if (response.ok) {
-            alert('File uploaded successfully')
-        } else {
-            alert('Error uploaded file')
-        }
-    } catch (err) {
-        console.error("Error uploading file: ", err)
-    }
+    localStorage.setItem(fileName, content)
 })
 
 document.querySelector('.left-download').addEventListener('click', async function () {
@@ -191,47 +138,35 @@ document.querySelector('.right-download').addEventListener('click', async functi
 })
 document.querySelectorAll('.download').forEach(element => {
     element.addEventListener('click', async function () {
-        let filename
+        let fileName
         if (side === "left") {
-            leftselected === "input" ? filename = 'input.txt' : filename = 'optab.txt'
+            leftselected === "input" ? fileName = 'input.txt' : fileName = 'optab.txt'
         } else if (side === "right") {
             if (rightselected === "intermediate") {
-                filename = 'intermediate.txt'
+                fileName = 'intermediate.txt'
             } else if (rightselected === "symtab") {
-                filename = 'symtab.txt'
+                fileName = 'symtab.txt'
             } else if (rightselected === "output") {
-                filename = 'output.txt'
+                fileName = 'output.txt'
             }
         }
-        console.log(filename + " downloaded")
+        const text = localStorage.getItem(fileName)
 
-        // try {
-        //     const result = await fetch('download/' + filename)
-        //     if (!result.ok) {
-        //         throw new Error('Error downloading file')
-        //     }
-        //     const blob = await result.blob()
-        //     const url = URL.createObjectURL(blob)
-        //     const a = document.createElement('a')
-        //     a.href = url
-        //     a.download = filename
-        //     a.click()
-        //     a.remove()
-        //     URL.revokeObjectURL(url)
-        // } catch (err) {
-        //     console.error('Error downloading file:', err)
-        // }
 
         try {
-            const response = await fetch('/download/' + filename, { method: 'HEAD' });
-            if (response.ok) {
-                window.location.href = '/download/' + filename;
-            } else {
-                alert('File not found bro');
-            }
-        } catch (err) {
-            console.error(err);
-            alert('An error occurred.');
+            const handle = await window.showSaveFilePicker({
+                suggestedName: fileName,
+                types: [{
+                    description: 'Text Files',
+                    accept: { 'text/plain': ['.txt'] },
+                }],
+            })
+
+            const writable = await handle.createWritable()
+            await writable.write(text)
+            await writable.close()
+        } catch (error) {
+            console.error('Error saving file:', error)
         }
     })
 })
@@ -241,18 +176,31 @@ document.querySelector('.reset-btn').addEventListener('click', async () => {
     if (result) {
         document.querySelector('.left-box textarea').value = ""
         document.querySelector('.right-box textarea').value = ""
-        const result = await fetch('/reset')
+        localStorage.clear()
 
-        document.querySelector('.left-box textarea').placeholder = "Write your" + leftselected + "code here"
-        document.querySelector('.right-box textarea').placeholder = "Run the assembler to generate" + rightselected + "file"
+        document.querySelector('.left-box textarea').placeholder = "Write your " + leftselected + " code here"
+        document.querySelector('.right-box textarea').placeholder = "Run the assembler to generate " + rightselected + " file"
     }
 })
 
 document.querySelector('.run-btn').addEventListener('click', async () => {
     try {
-        const response = await fetch("/pass1")
+        const response = await fetch("/pass1", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                input: localStorage.getItem('input.txt'),
+                optab: localStorage.getItem('optab.txt')
+            })
+        })
+
         if (response.ok) {
             const text = await response.json()
+            localStorage.setItem('intermediate.txt', text.intermediate)
+            localStorage.setItem('symtab.txt', text.symtab)
+            localStorage.setItem('output.txt', text.output)
 
             if (rightselected === "intermediate")
                 document.querySelector('.right-box textarea').value = text.intermediate
@@ -263,8 +211,16 @@ document.querySelector('.run-btn').addEventListener('click', async () => {
         } else {
             if (response.status === 400) {
                 alert("Input or Optab file missing")
-            } else if (response.status === 502) {
-                if (rightselected === "output"){
+            } else if (response.status === 505) {
+                const text = await response.json()
+                localStorage.setItem('intermediate.txt', text.intermediate)
+                localStorage.setItem('symtab.txt', text.symtab)
+                localStorage.setItem('output.txt', text.output)
+                if (rightselected === "intermediate") {
+                    document.querySelector('.right-box textarea').value = text.intermediate
+                } else if (rightselected === "symtab") {
+                    document.querySelector('.right-box textarea').value = text.symtab
+                } else if (rightselected === "output") {
                     document.querySelector('.right-box textarea').value = ""
                     document.querySelector('.right-box textarea').placeholder = "Wrong input or optab."
                 }
