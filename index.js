@@ -9,7 +9,7 @@ app.use(express.static('public'))
 app.use(express.json())
 
 app.get('/', (req, res) => {
-    res.sendFile('public/index.html', { root: __dirname })
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
 app.post('/pass1', async (req, res) => {
