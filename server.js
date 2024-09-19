@@ -18,7 +18,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     }
 
     const filePath = path.join('uploads', file.originalname)
-    fs.rename(file.path, filePath, (err) => {
+    fs.promises.rename(file.path, filePath, (err) => {
         if (err) {
             return res.status(500).send('Error saving file.')
         }
