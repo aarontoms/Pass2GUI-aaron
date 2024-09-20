@@ -7,7 +7,7 @@ const port = process.env.port || 3000
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json())
 
-app.post('/pass1', function (req, res){
+app.post('/pass1', function (req, res) {
     try {
         // res.json({ intermediate: "AUGEYSTOOOO", symtab: "AUGEYSTOOOO", output: "AUGEYSTOOOO" })
         const input = req.body.input
@@ -39,8 +39,8 @@ app.post('/pass1', function (req, res){
         }
 
         const pass2out = pass2(optabArr, intermediateArr, symtabArr)
-        // console.log(pass2out.output)
-        if (pass2out.output === "AUGEYSTOOOO") {
+        // console.log(pass2out.output2)
+        if (pass2out.output === "AUGEYSTOOOO" || pass2out.output2 === "AUGEYSTOOOO") {
             res.status(505)
         }
         pass2out.intermediate = pass1out.intermediate
@@ -180,16 +180,48 @@ function pass2(optabArr, intermediateArr, symtabArr) {
     for (let j = 1; j < intermediateArr.length; j++) {
         output += intermediateArr[j][0] + "\t" + intermediateArr[j][1] + "\t" + intermediateArr[j][2] + "\t" + intermediateArr[j][3] + "\t" + objectCodeArr[j - 1] + "\n"
     }
+    const lower = parseInt(intermediateArr[1][0], 16)
+    const upper = parseInt(intermediateArr[intermediateArr.length - 1][0], 16)
+    const length = upper - lower
+    let output2 = "H^" + intermediateArr[0][1].padEnd(6, "_") + "^" + intermediateArr[1][0] + "^" + length.toString(16).padStart(6, "0") + "\n\n"
+    let lines = intermediateArr.length - 1, x = 1, text = "", size = 0, keri = false
     // console.log(objectCodeArr)
+    let start = intermediateArr[x][0]
+    while (x < intermediateArr.length) {
+        keri = false
+        if (objectCodeArr[x - 1] === "\t") {
+            x++
+            continue
+        }
+        text += "^" + objectCodeArr[x - 1]
+        size += objectCodeArr[x - 1].length / 2
+        if (size > 21) {
+            keri = true
+            size -= objectCodeArr[x - 1].length / 2
+            text = text.slice(0, -objectCodeArr[x - 1].length-1)
+            output2 += "T^" + start + "^" + size.toString(16).padStart(2, "0") + text + "\n"
+            start = intermediateArr[x][0]
+            text = ""
+            size = 0
+            continue
+        }
+        x++
+    }
+    if(!keri){
+        output2 += "T^" + start + "^" + size.toString(16).padStart(2, "0") + text + "\n\n"
+    }
+
+    output2 += "E^" + intermediateArr[1][0]
+    // console.log(output2)
 
     symtabArr.forEach((symLine) => {
         if (symLine[2] == 1) {
             output = "AUGEYSTOOOO"
+            output2 = "AUGEYSTOOOO"
         }
-
     })
 
-    return { output }
+    return { output, output2 }
 }
 
 app.get('/reset', async (req, res) => {

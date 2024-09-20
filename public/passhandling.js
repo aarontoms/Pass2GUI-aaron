@@ -64,7 +64,7 @@ document.querySelector('.intermediate-btn').addEventListener('click', async () =
     document.querySelector('#rname').innerHTML = "Intermediate File"
     rightselected = "intermediate"
     document.querySelector('.intermediate-btn').style.backgroundColor = "#38405c"
-    document.querySelectorAll('.symtab-btn, .output-btn').forEach((btn) => {
+    document.querySelectorAll('.symtab-btn, .output-btn, .output-btn2').forEach((btn) => {
         btn.style.backgroundColor = "#44475a"
     })
 
@@ -80,7 +80,7 @@ document.querySelector('.symtab-btn').addEventListener('click', async () => {
     document.querySelector('#rname').innerHTML = "Symtab File"
     rightselected = "symtab"
     document.querySelector('.symtab-btn').style.backgroundColor = "#38405c"
-    document.querySelectorAll('.intermediate-btn, .output-btn').forEach((btn) => {
+    document.querySelectorAll('.intermediate-btn, .output-btn, .output-btn2').forEach((btn) => {
         btn.style.backgroundColor = "#44475a"
     })
 
@@ -96,7 +96,7 @@ document.querySelector('.output-btn').addEventListener('click', async () => {
     document.querySelector('#rname').innerHTML = "Output File"
     rightselected = "output"
     document.querySelector('.output-btn').style.backgroundColor = "#38405c"
-    document.querySelectorAll('.symtab-btn, .intermediate-btn').forEach((btn) => {
+    document.querySelectorAll('.symtab-btn, .intermediate-btn, .output-btn2').forEach((btn) => {
         btn.style.backgroundColor = "#44475a"
     })
 
@@ -106,6 +106,22 @@ document.querySelector('.output-btn').addEventListener('click', async () => {
     } else {
         document.querySelector('.right-box textarea').value = ""
         document.querySelector('.right-box textarea').placeholder = "Run the assembler to generate output file"
+    }
+})
+document.querySelector('.output-btn2').addEventListener('click', async () => {
+    document.querySelector('#rname').innerHTML = "Output Code"
+    rightselected = "output2"
+    document.querySelector('.output-btn2').style.backgroundColor = "#38405c"
+    document.querySelectorAll('.symtab-btn, .intermediate-btn, .output-btn').forEach((btn) => {
+        btn.style.backgroundColor = "#44475a"
+    })
+
+    const text = localStorage.getItem('output2.txt')
+    if (text && text !== "AUGEYSTOOOO") {
+        document.querySelector('.right-box textarea').value = text
+    } else {
+        document.querySelector('.right-box textarea').value = ""
+        document.querySelector('.right-box textarea').placeholder = "Run the assembler to generate output code"
     }
 })
 
@@ -204,6 +220,7 @@ document.querySelector('.run-btn').addEventListener('click', async () => {
             localStorage.setItem('intermediate.txt', text.intermediate)
             localStorage.setItem('symtab.txt', text.symtab)
             localStorage.setItem('output.txt', text.output)
+            localStorage.setItem('output2.txt', text.output2)
 
             if (rightselected === "intermediate")
                 document.querySelector('.right-box textarea').value = text.intermediate
@@ -211,6 +228,8 @@ document.querySelector('.run-btn').addEventListener('click', async () => {
                 document.querySelector('.right-box textarea').value = text.symtab
             else if (rightselected === "output" && text.output !== "AUGEYSTOOOO")
                 document.querySelector('.right-box textarea').value = text.output
+            else if (rightselected === "output2" && text.output2 !== "AUGEYSTOOOO")
+                document.querySelector('.right-box textarea').value = text.output2
         } else {
             if (response.status === 400) {
                 alert("Input or Optab file missing")
@@ -219,11 +238,15 @@ document.querySelector('.run-btn').addEventListener('click', async () => {
                 localStorage.setItem('intermediate.txt', text.intermediate)
                 localStorage.setItem('symtab.txt', text.symtab)
                 localStorage.setItem('output.txt', text.output)
+                localStorage.setItem('output2.txt', text.output2)
                 if (rightselected === "intermediate") {
                     document.querySelector('.right-box textarea').value = text.intermediate
                 } else if (rightselected === "symtab") {
                     document.querySelector('.right-box textarea').value = text.symtab
                 } else if (rightselected === "output") {
+                    document.querySelector('.right-box textarea').value = ""
+                    document.querySelector('.right-box textarea').placeholder = "Wrong input or optab."
+                } else if (rightselected === "output2") {
                     document.querySelector('.right-box textarea').value = ""
                     document.querySelector('.right-box textarea').placeholder = "Wrong input or optab."
                 }
