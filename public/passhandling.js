@@ -164,7 +164,10 @@ document.querySelectorAll('.download').forEach(element => {
                 fileName = 'symtab.txt'
             } else if (rightselected === "output") {
                 fileName = 'output.txt'
+            } else if (rightselected === "output2") {
+                fileName = 'output2.txt'
             }
+
         }
         const text = localStorage.getItem(fileName)
 
