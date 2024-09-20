@@ -1,6 +1,5 @@
 const express = require('express')
 const path = require('path')
-const fs = require('fs').promises
 
 const app = express()
 const port = process.env.port || 3000
@@ -8,13 +7,9 @@ const port = process.env.port || 3000
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
-
 app.post('/pass1', function (req, res){
     try {
-        res.json({ intermediate: "AUGEYSTOOOO", symtab: "AUGEYSTOOOO", output: "AUGEYSTOOOO" })
+        // res.json({ intermediate: "AUGEYSTOOOO", symtab: "AUGEYSTOOOO", output: "AUGEYSTOOOO" })
         const input = req.body.input
         const optab = req.body.optab
         if (!input || !optab || input === "" || optab === "") {
@@ -54,7 +49,6 @@ app.post('/pass1', function (req, res){
 
     } catch (err) {
         return res.status(500).send("Assembler error.")
-
     }
 })
 
