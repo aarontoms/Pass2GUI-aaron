@@ -177,6 +177,7 @@ button:hover {
     .outbox {
         flex-direction: column;
         width: 100vw;
+        margin: 0;
     }
 
     .input-btn,
@@ -195,6 +196,7 @@ button:hover {
     .left,
     .right {
         width: 80%;
+        margin-right: 5%;
     }
 
     .left-box,
