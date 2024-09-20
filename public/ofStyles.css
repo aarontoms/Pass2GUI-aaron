@@ -33,18 +33,19 @@ body {
 
 .left,
 .right {
-    margin-left: 20px;
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
 
 .left {
+    margin-left: 20px;
     width: 44%;
 }
 
 .right {
     width: 56%;
+    margin-left: 10px;
 }
 
 .left-box,
@@ -150,7 +151,6 @@ button:hover {
 }
 
 .reset-btn {
-    margin-left: 5px;
     background-color: #a25d44;
 }
 
@@ -176,7 +176,6 @@ button:hover {
 @media (max-width: 1000px) {
     .outbox {
         flex-direction: column;
-        padding: 5% 0;
         width: 100vw;
     }
 
@@ -196,12 +195,11 @@ button:hover {
     .left,
     .right {
         width: 80%;
-        max-width: 400px;
     }
 
     .left-box,
     .right-box {
-        width: 90%;
+        width: 100%;
         margin: 0 auto;
         padding: 15px;
     }
