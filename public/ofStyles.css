@@ -8,7 +8,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .outbox {
@@ -38,10 +38,12 @@ body {
     justify-content: center;
     flex-direction: column;
 }
-.left{
+
+.left {
     width: 44%;
 }
-.right{
+
+.right {
     width: 56%;
 }
 
@@ -128,7 +130,7 @@ button:hover {
     margin-left: 10px;
 }
 
-.upload{
+.upload {
     padding: 6px;
     rotate: 180deg;
 }
@@ -169,4 +171,38 @@ button:hover {
 
 .run-btn:hover {
     background-color: #804935;
+}
+
+@media (max-width: 1000px) {
+    .outbox {
+        flex-direction: column;
+        padding: 5% 0;
+        width: 100vw;
+    }
+
+    .input-btn,
+    .output-btn,
+    .intermediate-btn,
+    .symtab-btn,
+    .output-btn,
+    .output-btn2 {
+        margin-bottom: 3px;
+    }
+
+    .run-btn {
+        margin: 15px 0;
+    }
+
+    .left,
+    .right {
+        width: 80%;
+        max-width: 400px;
+    }
+
+    .left-box,
+    .right-box {
+        width: 90%;
+        margin: 0 auto;
+        padding: 15px;
+    }
 }
